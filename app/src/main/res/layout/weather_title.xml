@@ -8,7 +8,7 @@
         android:layout_height="30dp"
         android:id="@+id/nav_btn"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="10dp"
         android:background="@drawable/ic_home"/>
 
     <TextView
@@ -26,7 +26,7 @@
         android:id="@+id/title_update_time"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="10dp"
         android:text="8:30"
         android:textColor="@android:color/white"
         android:textSize="16sp"/>
