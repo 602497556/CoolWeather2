@@ -98,10 +98,18 @@ public class ChooseAreaFragment extends Fragment {
                     queryCounties();
                 } else if( currentLevel == LEVEL_COUNTY ){
                     String weatherId = counties.get(position).getWeatherId();
-                    Intent intent = new Intent(getContext(),WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);
-                    startActivity(intent);
-                    getActivity().finish();
+                    // 判断碎片依附于哪个Activity，执行不同的逻辑
+                    if( getActivity() instanceof MainActivity ){
+                        Intent intent = new Intent(getContext(),WeatherActivity.class);
+                        intent.putExtra("weather_id",weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else if( getActivity() instanceof WeatherActivity ){
+                        WeatherActivity activity = (WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefreshLayout.setRefreshing(true);
+                        activity.requestWeatherInfo(weatherId);
+                    }
                 }
             }
         });
