@@ -11,6 +11,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,7 +19,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".WeatherActivity"></activity>
+        <activity android:name=".WeatherActivity"/>
+
+        <!--由于是new->Java class,导致此服务并没有在此注册,启动服务时也没报错-->
+        <service android:name=".service.AutoUpdateService"
+            android:enabled="true"
+            android:exported="true"/>
+
     </application>
 
 </manifest>

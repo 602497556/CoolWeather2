@@ -1,5 +1,6 @@
 package com.example.coolweather2;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.coolweather2.gson.Forecast;
 import com.example.coolweather2.gson.Weather;
+import com.example.coolweather2.service.AutoUpdateService;
 import com.example.coolweather2.util.HttpUtil;
 import com.example.coolweather2.util.Utility;
 
@@ -197,38 +199,46 @@ public class WeatherActivity extends AppCompatActivity {
      * @param weather 包含天气信息的实体类
      */
     private void showWeatherInfo(Weather weather) {
-        String cityNameStr = weather.basic.cityName;
-        String updateTimeStr = weather.basic.update.updateTime.split(" ")[1];
-        String degreeTextStr = weather.now.temperature+"℃";
-        cityName.setText(cityNameStr);
-        updateTime.setText(updateTimeStr);
-        degreeText.setText(degreeTextStr);
-        weatherInfo.setText(weather.now.more.info);
-        forecastLayout.removeAllViews(); //先移除所有View
-        for(Forecast forecast : weather.forecastList){
-            View view = LayoutInflater.from(this).inflate(R.layout.forecast_item,
-                    forecastLayout, false);
-            dateText = (TextView) view.findViewById(R.id.date_text);
-            infoText = (TextView) view.findViewById(R.id.info_text);
-            maxTemp = (TextView) view.findViewById(R.id.max_text);
-            minTemp = (TextView) view.findViewById(R.id.min_text);
-            dateText.setText(forecast.date);
-            infoText.setText(forecast.more.info);
-            maxTemp.setText(forecast.temperature.max+"℃");
-            minTemp.setText(forecast.temperature.min+"℃");
-            forecastLayout.addView(view);
+        if( weather != null && "ok".equals(weather.status) ){
+            String cityNameStr = weather.basic.cityName;
+            String updateTimeStr = weather.basic.update.updateTime.split(" ")[1];
+            String degreeTextStr = weather.now.temperature+"℃";
+            cityName.setText(cityNameStr);
+            updateTime.setText(updateTimeStr);
+            degreeText.setText(degreeTextStr);
+            weatherInfo.setText(weather.now.more.info);
+            forecastLayout.removeAllViews(); //先移除所有View
+            for(Forecast forecast : weather.forecastList){
+                View view = LayoutInflater.from(this).inflate(R.layout.forecast_item,
+                        forecastLayout, false);
+                dateText = (TextView) view.findViewById(R.id.date_text);
+                infoText = (TextView) view.findViewById(R.id.info_text);
+                maxTemp = (TextView) view.findViewById(R.id.max_text);
+                minTemp = (TextView) view.findViewById(R.id.min_text);
+                dateText.setText(forecast.date);
+                infoText.setText(forecast.more.info);
+                maxTemp.setText(forecast.temperature.max+"℃");
+                minTemp.setText(forecast.temperature.min+"℃");
+                forecastLayout.addView(view);
+            }
+            if(weather.aqi != null){
+                aqiText.setText(weather.aqi.city.aqi);
+                pmText.setText(weather.aqi.city.pm25);
+            }
+            String comfortContent = "舒适度："+weather.suggestion.comfort.info;
+            String carWashContent = "洗车指数："+weather.suggestion.carWash.info;
+            String sportContent = "运动建议："+weather.suggestion.sport.info;
+            comfortText.setText(comfortContent);
+            carWashText.setText(carWashContent);
+            sportText.setText(sportContent);
+            scrollView.setVisibility(View.VISIBLE);
+            // 启动定时任务
+            Intent intent = new Intent(this, AutoUpdateService.class);
+            startService(intent);
+        } else {
+            Toast.makeText(WeatherActivity.this,"获取天气信息失败",
+                    Toast.LENGTH_SHORT).show();
         }
-        if(weather.aqi != null){
-            aqiText.setText(weather.aqi.city.aqi);
-            pmText.setText(weather.aqi.city.pm25);
-        }
-        String comfortContent = "舒适度："+weather.suggestion.comfort.info;
-        String carWashContent = "洗车指数："+weather.suggestion.carWash.info;
-        String sportContent = "运动建议："+weather.suggestion.sport.info;
-        comfortText.setText(comfortContent);
-        carWashText.setText(carWashContent);
-        sportText.setText(sportContent);
-        scrollView.setVisibility(View.VISIBLE);
     }
 
     /**

@@ -3,7 +3,6 @@ package com.example.coolweather2;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,8 +56,6 @@ public class ChooseAreaFragment extends Fragment {
 
     private City selectedCity; //选中的市
 
-    private County selectedCounty; //选中的县
-
     private ProgressDialog progressDialog;
 
     public static final int LEVEL_PROVINCE = 0;
@@ -84,7 +81,7 @@ public class ChooseAreaFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
