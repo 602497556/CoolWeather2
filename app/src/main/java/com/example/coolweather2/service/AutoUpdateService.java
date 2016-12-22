@@ -52,8 +52,9 @@ public class AutoUpdateService extends Service {
         long triggerAtTime = SystemClock.elapsedRealtime() + time;
         Intent i = new Intent(this,AutoUpdateService.class);
         PendingIntent pi = PendingIntent.getService(this,0,i,0);
-        pi.cancel(); // 这句话有什么用？
-        manager.set(AlarmManager.ELAPSED_REALTIME,triggerAtTime,pi);
+        manager.cancel(pi); // 这句话有什么用？
+        // 之前是用的AlarmManager.ELAPSED_REALTIME导致不能后台更新数据
+        manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
         return super.onStartCommand(intent, flags, startId);
     }
 
